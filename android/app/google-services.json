@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "481037465906",
+    "project_id": "flutter-task-management-app",
+    "storage_bucket": "flutter-task-management-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481037465906:android:565d4e1f1ab44d23bbff2b",
+        "android_client_info": {
+          "package_name": "com.example.taskito_task_management"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "481037465906-jjohj87na4k05meodq25b3jkb2j36bs8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbmass7Xok-qsQA_6B2lgYUXlP7pzoaXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "481037465906-jjohj87na4k05meodq25b3jkb2j36bs8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "481037465906-8pffd4glo70hs33rsk9n3d1vgnga1vli.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.FatihGeylan.TaskManagementApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
