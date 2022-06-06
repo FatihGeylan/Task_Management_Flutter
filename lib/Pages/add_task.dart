@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:taskito_task_management/category_selection.dart';
+import 'package:taskito_task_management/Pages/category_selection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:taskito_task_management/hasura_queries_mutations/task_queries_mutations.dart';
+import 'package:taskito_task_management/Pages/tasks_page.dart';
 
-import 'Models/task.dart';
-import 'tasks_repository.dart';
+import '../Repositories/tasks_repository.dart';
 
 class AddTaskPage extends ConsumerStatefulWidget {
   const AddTaskPage({Key? key}) : super(key: key);
@@ -38,8 +40,8 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
   TextEditingController taskNameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
-  // String newTaskName = '';
-  // String newDescription = '';
+  String startTime = '';
+  String endTime = '';
   String newCategory = '';
   bool isSelected = false;
 
@@ -74,7 +76,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
           actions:  [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/24, vertical: MediaQuery.of(context).size.width/19),
-              child: Text(
+              child: const Text(
                 '👩🏼',
                 textScaleFactor: 2.9,
               ),
@@ -104,7 +106,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                      EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height/22, horizontal: MediaQuery.of(context).size.width/15),
                 decoration: BoxDecoration(
                   color: Colors.indigo.shade50,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
                 ),
                 child: SingleChildScrollView(
                   child: Column(
@@ -254,6 +256,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                                 if (newTime != null) {
                                   setState(() {
                                     time = newTime;
+                                    startTime = '${newTime.hour.toString()}:${newTime.minute.toString()}';
 
                                   });
                                 }
@@ -286,6 +289,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                                 if (newTime != null) {
                                   setState(() {
                                     time2 = newTime;
+                                    endTime = '${newTime.hour.toString()}:${newTime.minute.toString()}';
                                   });
                                 }
                               },
@@ -339,7 +343,7 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
 
                       Row(
                         children: [
-                          Container(
+                          SizedBox(
                             height: MediaQuery.of(context).size.height/18,
                             child: ListView.builder(
                               shrinkWrap: true,
@@ -395,25 +399,56 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                             Expanded(
                               child: SizedBox(
                                 height: MediaQuery.of(context).size.height/15,
-                                child: ElevatedButton(
-                                    onPressed: () {
-                                      ref.read(tasksProvider).addTask(
-                                          Task(taskNameController.text, descriptionController.text,
-                                              newCategory,DateTime.parse(selectedDate.toLocal().toString().split(' ')[0]),time,time2),ref.read(tasksProvider).lastSelectedDay??DateTime.now());
-                                     // ref.read(ta(sksProvider).matchTasks(selectedDate);
-                                      Navigator.pop(context);
-                                    },
-                                    child:
-                                    const Text(
-                                      'Create New Task',
-                                      style: TextStyle(fontSize: 17),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                    primary: Colors.indigo.shade400,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12), // <-- Radius
-                                    ),
+                                child: Mutation(
+                                  options: MutationOptions(
+                                    document: gql(FetchTask().addTask)
                                   ),
+                                  builder: (
+                                    RunMutation runMutation,
+                                    QueryResult? result,
+                                  ) {
+                                    return ElevatedButton(
+                                      onPressed: () {
+                                        runMutation(
+                                          {
+                                            "name": taskNameController.text,
+                                            "description": descriptionController.text,
+                                            "category": newCategory,
+                                            "date": selectedDate.toLocal().toString().split(' ')[0],
+                                            "start_time": startTime,
+                                            "end_time": endTime
+                                          },
+                                        );
+                                        // ref.read(tasksProvider).addTask(
+                                        //     Task(taskNameController.text,
+                                        //         descriptionController.text,
+                                        //         newCategory,
+                                        //         selectedDate.toLocal()
+                                        //             .toString()
+                                        //             .split(' ')[0], startTime,
+                                        //         endTime),
+                                        //     ref.read(tasksProvider)
+                                        //         .lastSelectedDay ??
+                                        //         DateTime.now());
+                                        // ref.read(ta(sksProvider).matchTasks(selectedDate);
+                                        _gotoTasks(context);
+                                      },
+
+                                      child:
+                                      const Text(
+                                        'Create New Task',
+                                        style: TextStyle(fontSize: 17),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Colors.indigo.shade400,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              12), // <-- Radius
+                                        ),
+                                      ),
+                                    );
+                                  }
+
                                 ),
                               ),
                             )
@@ -429,5 +464,10 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
         ),
       ),
     );
+  }
+  void _gotoTasks(BuildContext context){
+    Navigator.of(context).push(MaterialPageRoute(builder: (context){
+      return const TasksPage();
+    },));
   }
 }

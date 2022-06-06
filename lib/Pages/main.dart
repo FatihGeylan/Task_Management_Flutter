@@ -2,14 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:taskito_task_management/create_user_page.dart';
-import 'package:taskito_task_management/tasks_page.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:taskito_task_management/Pages/create_user_page.dart';
+import 'package:taskito_task_management/Pages/tasks_page.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
+
+import '../Services/graphql_data.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initHiveForFlutter();
   await Firebase.initializeApp();
 
   runApp(const ProviderScope(child: MyApp()));
@@ -21,13 +23,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //FirebaseAuth.instance.createUserWithEmailAndPassword(email: "email@gmail.com", password: "password");
-    return MaterialApp(
-      title: 'ToDo APP',
-      theme: ThemeData().copyWith(
-        scaffoldBackgroundColor: Colors.indigo.shade50,
-        colorScheme: ThemeData().colorScheme.copyWith(primary: Colors.indigo.shade400),
+    return GraphQLProvider(
+      client: graphQlObject.client,
+      child: CacheProvider(
+        child: MaterialApp(
+          title: 'ToDo APP',
+          theme: ThemeData().copyWith(
+            scaffoldBackgroundColor: Colors.indigo.shade50,
+            colorScheme: ThemeData().colorScheme.copyWith(primary: Colors.indigo.shade400),
+          ),
+          home: const MyHomePage(),
+        ),
       ),
-      home: const MyHomePage(),
     );
   }
 }
@@ -48,14 +55,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _success = false;
   String _userEmail= '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Task Management Application',style: const TextStyle(color: Colors.black),),
+        title: const Text('Task Management Application',style: TextStyle(color: Colors.black),),
       ),
       body: Form(
         key: _formKey,
@@ -66,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: MediaQuery.of(context).size.width/3,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width/20*15,
 
                 // height: 200.0,
@@ -88,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           hintText: 'Type your mail',
                           labelText: 'example@gmail.com'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 25,
                     ),
                     TextFormField(
@@ -133,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ElevatedButton(onPressed: () {
                       _gotoTasks(context);
                     },
-                        child: Text('Giris'))
+                        child: const Text('Giris'))
                   ],
                 ),
               ),
@@ -175,21 +181,18 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
               'No user found for that email.'
           ),
         ));
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
               'Wrong password provided for that user.'
           ),
         ));
       } else if (e.code == 'invalid-email') {
-        print('Invalid email');
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
               'Invalid email provided.'

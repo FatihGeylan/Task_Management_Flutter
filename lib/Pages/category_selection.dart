@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:taskito_task_management/tasks_repository.dart';
+
 
 List<String> Category = [
   'URGENT',
@@ -19,7 +18,6 @@ class CategorySelection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tasksRepository = ref.watch(tasksProvider);
     return Padding(
       padding: const EdgeInsets.only(right: 12.0),
       child: Container(
@@ -35,22 +33,14 @@ class CategorySelection extends ConsumerWidget {
 
           children: [
 
-            Container(
-              // width: MediaQuery.of(context).size.width/5,
-              // height: MediaQuery.of(context).size.height/18,
-              // decoration: BoxDecoration(
-              //   color: backColor,
-              //   borderRadius: BorderRadius.circular(15),),
-
-              child: Center(
-                child: Text(
-                  task_type,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: dayColor,
-                  ),
-
+            Center(
+              child: Text(
+                task_type,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: dayColor,
                 ),
+
               ),
             ),
             Positioned(
@@ -62,7 +52,7 @@ class CategorySelection extends ConsumerWidget {
                   color: Colors.white,
                     icon: Container(
                         decoration: BoxDecoration(color:backColor, shape: BoxShape.circle),
-                        child: Icon(Icons.check,)),
+                        child: const Icon(Icons.check,)),
                     onPressed: () {}),
               ),
             ),

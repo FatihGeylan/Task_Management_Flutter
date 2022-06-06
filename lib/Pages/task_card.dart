@@ -1,17 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class TaskCard extends StatelessWidget {
   final String task_type;
   final String task_name;
   final String description;
   final Color dayColor;
-  final DateTime date;
-  final TimeOfDay? startTime;
-  final TimeOfDay? endTime;
+  final String date;
+  final String startTime;
+  final String endTime;
 
-  TaskCard({
+  const TaskCard({
         required this.task_type,
         required this.task_name,
         required this.dayColor,
@@ -38,7 +36,7 @@ class TaskCard extends StatelessWidget {
                 children: [
                   Padding(
                     padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/30),
-                    child: Container(
+                    child: SizedBox(
                       height: MediaQuery.of(context).size.height/19,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,8 +78,7 @@ class TaskCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
 
                         children: [
-                          Container(
-
+                          SizedBox(
                             width: MediaQuery.of(context).size.width-90,
                             child: Row(
                               //crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,27 +90,27 @@ class TaskCard extends StatelessWidget {
                                       fontSize: 22, fontWeight: FontWeight.bold),
                                 ),
 
-                                  Spacer(),
+                                  const Spacer(),
 
                                        // IconButton(
                                        //   icon: const Icon(Icons.more_vert), onPressed: () {  },
                                        // ),
                                 PopupMenuButton(
                                   // add icon, by default "3 dot" icon
-                                     icon: Icon(Icons.more_vert),
+                                     icon: const Icon(Icons.more_vert),
                                     itemBuilder: (context){
                                       return [
-                                        PopupMenuItem<int>(
+                                        const PopupMenuItem<int>(
                                           value: 0,
                                           child: Text("Does"),
                                         ),
 
-                                        PopupMenuItem<int>(
+                                        const PopupMenuItem<int>(
                                           value: 1,
                                           child: Text("Nothing"),
                                         ),
 
-                                        PopupMenuItem<int>(
+                                        const PopupMenuItem<int>(
                                           value: 2,
                                           child: Text("For now"),
                                         ),
@@ -135,7 +132,14 @@ class TaskCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Text(description, style: TextStyle(fontSize: 16),),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width/4*3,
+                            child: Text(description, style: const TextStyle(fontSize: 16),
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.fade,
+                            ),
+                          ),
                         ],
                       ),
                     )
@@ -154,8 +158,11 @@ class TaskCard extends StatelessWidget {
                             icon: const Icon(Icons.access_time)
                         ),
                         // const Text('10 - 11 AM', style: TextStyle(fontSize: 16),)
-                        Text('${startTime!.hour.toString()}:${startTime!.minute.toString()} - ${endTime!.hour.toString()}:${endTime!.minute.toString()}'
-                            ,style: TextStyle(fontSize: 15),
+                        // Text('${startTime!.hour.toString()}:${startTime!.minute.toString()} - ${endTime!.hour.toString()}:${endTime!.minute.toString()}'
+                        //     ,style: TextStyle(fontSize: 15),
+                        // ),
+                        Text('$startTime - $endTime'
+                          ,style: const TextStyle(fontSize: 15),
                         ),
                         // Text('${endTime!.hour.toString()}:${endTime!.minute.toString()}'),
                       ],
@@ -176,10 +183,10 @@ class TaskCard extends StatelessWidget {
                       children: [
                         IconButton(
                           onPressed: (){},
-                          icon: Icon(Icons.calendar_month_outlined),
+                          icon: const Icon(Icons.calendar_month_outlined),
                         ),
-                        Text('${date.toLocal()}'.split(' ')[0]
-                          ,style: TextStyle(fontSize: 15),)
+                        Text(date
+                          ,style: const TextStyle(fontSize: 15),)
                       ],
                     ),
                   ),

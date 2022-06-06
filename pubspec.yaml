@@ -42,6 +42,8 @@ dependencies:
   google_sign_in: ^5.3.1
   intl: ^0.17.0
   cloud_firestore: ^3.1.10
+  graphql_flutter: ^5.1.0
+  shared_preferences: ^2.0.15
 dev_dependencies:
   flutter_test:
     sdk: flutter

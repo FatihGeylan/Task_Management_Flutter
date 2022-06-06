@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
-import 'Models/category.dart';
-import 'Models/task.dart';
+import '../Models/category.dart';
+import '../Models/task.dart';
 
 class TasksRepository extends ChangeNotifier{
 
@@ -13,11 +12,7 @@ class TasksRepository extends ChangeNotifier{
 
 
 
-  List<Task> tasks = [
-    Task('New Web UI Design Project', 'Website UI Design for \$500', 'URGENT', DateTime.now(),TimeOfDay(hour: 12, minute: 40),TimeOfDay(hour: 13, minute: 30)),
-    Task('Application Design Meeting', 'Website UI Design for \$500', 'RUNNING', DateTime.now(),TimeOfDay(hour: 09, minute: 00),TimeOfDay(hour: 10, minute: 30)),
-    Task('Web Design Meeting', 'Website UI Design for \$500', 'ONGOING', DateTime.now(),TimeOfDay(hour: 18, minute: 10),TimeOfDay(hour: 19, minute: 45)),
-  ];
+  List<Task> tasks = [ ];
 
   List<Task> datedTasks = [];
 
@@ -27,6 +22,9 @@ class TasksRepository extends ChangeNotifier{
     int counter =0;
     for(int i=0; i<tasks.length;i++ ){
       if(tasks[i].date == date){
+        if(i==0){
+          datedTasks.clear();
+        }
         counter++;
         datedTasks.add(tasks[i]);
       }
